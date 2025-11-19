@@ -1,109 +1,279 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MEHTA TOSS BOOK 📖</title>
+<meta charset="UTF-8">
+<title>MEHTA TOSS BOOK DASHBOARD</title>
 <style>
-body{font-family:sans-serif;background:#f3f5f7;color:#111;margin:0;padding:0}
-.wrap{max-width:900px;margin:auto;padding:16px}
-.card{background:#fff;padding:12px;margin-bottom:12px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-input,select,button{padding:8px;margin:4px 0;width:100%;border-radius:6px;border:1px solid #ccc}
-button{background:#1d9bf0;color:#fff;border:none;cursor:pointer}
-button.ghost{background:#fff;border:1px solid #1d9bf0;color:#1d9bf0}
-.dp-area{white-space:pre-wrap;background:#fff;padding:8px;border:1px solid #ccc;border-radius:6px;min-height:80px;font-family:monospace}
-.flex{display:flex;gap:6px;align-items:center}
+    body {
+        background:#111;
+        color:#eee;
+        font-family: "Segoe UI", sans-serif;
+        padding:10px;
+    }
+    h2 {
+        font-size:18px;
+        background:#222;
+        padding:8px;
+        border-left:3px solid #00aaff;
+    }
+    input, select {
+        width:100%;
+        padding:7px;
+        margin:4px 0;
+        background:#1e1e1e;
+        color:white;
+        border:1px solid #333;
+    }
+    button {
+        width:100%;
+        padding:8px;
+        margin-top:5px;
+        background:#0088ff;
+        color:white;
+        border:none;
+        border-radius:4px;
+        font-weight:bold;
+    }
+    button.red { background:#d13f3f; }
+    button.gold { background:#daa520; }
+    textarea {
+        width:100%;
+        height:200px;
+        background:#000;
+        color:#0f0;
+        padding:10px;
+        margin-top:10px;
+    }
+    .box {
+        margin-bottom:20px;
+        padding:10px;
+        background:#181818;
+        border:1px solid #333;
+    }
+    .msg { color:#0f0; font-size:13px; margin-top:3px; }
 </style>
 </head>
+
 <body>
-<div class="wrap">
-<h2>MEHTA TOSS BOOK 📖</h2>
 
-<div class="card">
-<strong>Create Match</strong>
-<input id="league" placeholder="League">
-<input id="teamA" placeholder="Team A">
-<input id="teamB" placeholder="Team B">
-<select id="oddsA"><option>2.0</option><option>0.95</option><option>0.97</option><option>0.98</option></select>
-<select id="oddsB"><option>2.0</option><option>0.95</option><option>0.97</option><option>0.98</option></select>
-<button onclick="createMatch()">Create Match</button>
-<div id="matchOutput"></div>
-</div>
+<h1>📖 MEHTA TOSS BOOK DASHBOARD</h1>
 
-<div class="card">
-<strong>Active Matches</strong>
-<select id="matchSelect"></select>
-<select id="winnerSelect"></select>
-<div class="flex">
-<button onclick="settleMatch()">Settle Match</button>
-<button onclick="voidMatch()">Void Match</button>
-</div>
-<div id="settleOutput"></div>
+<!-- PLAYER SECTION -->
+<div class="box">
+    <h2>➕ Add Player</h2>
+    <input id="add_name" placeholder="Player Name">
+    <input id="add_dp" placeholder="DP Number">
+    <input id="add_open" placeholder="Opening Balance">
+    <button id="addPlayerBtn">ADD PLAYER</button>
+    <div id="addOutput" class="msg"></div>
 </div>
 
-<div class="card">
-<strong>Add Player</strong>
-<input id="add_name" placeholder="Player Name">
-<input id="add_dp" placeholder="DP Number">
-<input id="add_open" placeholder="Opening Balance" type="number">
-<button onclick="addPlayer()">Add Player</button>
-<div id="addOutput"></div>
+<div class="box">
+    <h2>➖ Remove Player</h2>
+    <select id="removeSelect"></select>
+    <button id="removePlayerBtn" class="red">REMOVE PLAYER</button>
+    <div id="removeOutput" class="msg"></div>
 </div>
 
-<div class="card">
-<strong>Place Bet</strong>
-<select id="betMatchSelect"></select>
-<select id="betTeam"></select>
-<select id="betOdds"></select>
-<input id="dpNumber" placeholder="DP Number">
-<input id="betAmount" placeholder="Stake" type="number">
-<button onclick="placeBet()">Place Bet</button>
-<div id="betOutput"></div>
+<div class="box">
+    <h2>💰 Balance Update</h2>
+    <input id="balDP" placeholder="DP Number">
+    <input id="balAmount" placeholder="Amount (+ / -)">
+    <button id="updateBalBtn" class="gold">UPDATE BALANCE</button>
+    <div id="balanceOutput" class="msg"></div>
 </div>
 
-<div class="card">
-<strong>DP List</strong>
-<button onclick="copyDPList()">Copy DP List</button>
-<div id="dpList" class="dp-area">Loading...</div>
+<!-- MATCH SECTION -->
+<div class="box">
+    <h2>🎮 Create Match</h2>
+    <input id="league" placeholder="League Name (optional)">
+    <input id="teamA" placeholder="Team A">
+    <input id="teamB" placeholder="Team B">
+    <input id="oddsA" placeholder="Odds Team A (like 0.95)">
+    <input id="oddsB" placeholder="Odds Team B (like 0.97)">
+    <button id="createMatchBtn">CREATE MATCH</button>
+    <div id="createMatchOutput" class="msg"></div>
 </div>
+
+<!-- BET SECTION -->
+<div class="box">
+    <h2>🏏 Place Bet</h2>
+    <input id="betMatchId" placeholder="Match ID">
+    <input id="betDP" placeholder="DP Number">
+    <input id="betTeam" placeholder="Team Name">
+    <input id="betStake" placeholder="Stake Amount">
+    <input id="betOdds" placeholder="Odds">
+    <button id="placeBetBtn">PLACE BET</button>
+    <div id="betOutput" class="msg"></div>
 </div>
+
+<!-- SETTLE -->
+<div class="box">
+    <h2>✔️ Settle Match</h2>
+    <input id="settleMatchId" placeholder="Match ID">
+    <input id="settleWinner" placeholder="Winner Team">
+    <button id="settleBtn" class="gold">SETTLE MATCH</button>
+    <div id="settleOutput" class="msg"></div>
+</div>
+
+<!-- VOID -->
+<div class="box">
+    <h2>🚫 Void Match</h2>
+    <input id="voidMatchId" placeholder="Match ID">
+    <button id="voidBtn" class="red">VOID MATCH</button>
+    <div id="voidOutput" class="msg"></div>
+</div>
+
+<!-- DP LIST -->
+<div class="box">
+    <h2>📋 DP LIST</h2>
+    <button id="loadDpBtn">LOAD DP LIST</button>
+    <button id="copyDpBtn" class="gold">COPY LIST</button>
+    <textarea id="dpList"></textarea>
+</div>
+
+
+
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwK0Tyi84yRpO4FB8IrK2H5YP1ifT2OwmpWxFqnosInVFpYhoNqy-8DjbwKFdk0s1AJ/exec"; // <-- Replace with your Apps Script URL
+/* --------------------
+CONFIG
+-------------------- */
+const API_URL = "https://script.google.com/macros/s/AKfycbw5RVnOu6Aoij6Q41s6PBSMjg0cF4ZaEuqKrUIJj1p-Ccl0c0V3VMHcIk-PZjl9NnAm/exec";
 
-let matches=[],players={};
-
-async function call(action,payload={}){payload.action=action;
-try{const r=await fetch(API_URL,{method:'POST',headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),mode:'cors',credentials:'omit'});return await r.json();}catch(e){return {success:false,error:e.message}}
+/* quick api helper */
+async function api(action, data={}){
+    data.action = action;
+    try {
+        const res = await fetch(API_URL, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify(data)
+        });
+        return await res.json();
+    } catch(err){
+        return { success:false, error:String(err) };
+    }
 }
 
-function showMsg(msg,id,time=1500){document.getElementById(id).innerText=msg;setTimeout(()=>document.getElementById(id).innerText="",time)}
+/* --------------------
+PLAYER FUNCTIONS
+-------------------- */
+document.getElementById("addPlayerBtn").onclick = async()=>{
+    const res = await api("addPlayer",{
+        name: add_name.value,
+        dp: add_dp.value,
+        opening: add_open.value
+    });
+    addOutput.textContent = res.success ? "Player Added ✓" : res.error;
+    loadPlayers();
+};
 
-async function loadPlayers(){const r=await call("getPlayers");players={};if(r.success){r.players.forEach(p=>players[String(p[0])]={name:p[1],balance:p[2]});}renderDPList();}
+document.getElementById("removePlayerBtn").onclick = async()=>{
+    const dp = removeSelect.value;
+    if(!dp){ alert("Select DP"); return; }
+    const res = await api("removePlayer",{ dp });
+    removeOutput.textContent = res.success ? "Player Removed ✓" : res.error;
+    loadPlayers();
+};
 
-async function loadMatches(){const r=await call("getMatches");matches=[];const sel=document.getElementById("matchSelect"),bet=document.getElementById("betMatchSelect");sel.innerHTML="";bet.innerHTML="";if(r.success){matches=r.matches;matches.forEach(m=>{sel.insertAdjacentHTML('beforeend',`<option value="${m[0]}">${m[2]} vs ${m[3]} (${m[1]}) [${m[6]}]</option>`);bet.insertAdjacentHTML('beforeend',`<option value="${m[0]}">${m[2]} vs ${m[3]}</option>`);});updateWinnerSelect();updateBetTeam();}}
+document.getElementById("updateBalBtn").onclick = async()=>{
+    const res = await api("updateBalance",{
+        dp: balDP.value,
+        amount: Number(balAmount.value)
+    });
+    balanceOutput.textContent = res.success ? "Updated ✓": res.error;
+    loadPlayers();
+};
 
-function updateWinnerSelect(){const sel=document.getElementById("matchSelect"),win=document.getElementById("winnerSelect");const m=matches.find(x=>x[0]==sel.value);win.innerHTML="";if(m){win.innerHTML=`<option>${m[2]}</option><option>${m[3]}</option>`;}}
+/* --------------------
+MATCH FUNCTIONS
+-------------------- */
+createMatchBtn.onclick = async()=>{
+    const res = await api("createMatch",{
+        league: league.value,
+        teamA: teamA.value,
+        teamB: teamB.value,
+        oddsA: oddsA.value,
+        oddsB: oddsB.value
+    });
+    createMatchOutput.textContent = res.success ? ("Match Created ID: "+res.matchId) : res.error;
+};
 
-function updateBetTeam(){const sel=document.getElementById("betMatchSelect"),team=document.getElementById("betTeam"),odds=document.getElementById("betOdds");const m=matches.find(x=>x[0]==sel.value);team.innerHTML="";if(m){team.innerHTML=`<option value="${m[2]}">${m[2]}</option><option value="${m[3]}">${m[3]}</option>`;odds.value=m[4];}}
+/* --------------------
+BET FUNCTIONS
+-------------------- */
+placeBetBtn.onclick = async()=>{
+    const res = await api("addBet",{
+        matchId: betMatchId.value,
+        playerDp: betDP.value,
+        team: betTeam.value,
+        stake: betStake.value,
+        odds: betOdds.value
+    });
+    betOutput.textContent = res.success ? "Bet Placed ✓" : res.error;
+};
 
-document.getElementById("matchSelect").addEventListener("change",updateWinnerSelect);
-document.getElementById("betMatchSelect").addEventListener("change",updateBetTeam);
+/* --------------------
+SETTLE MATCH
+-------------------- */
+settleBtn.onclick = async()=>{
+    const res = await api("settleMatch",{
+        matchId: settleMatchId.value,
+        winner: settleWinner.value
+    });
+    settleOutput.textContent = res.success ? "Settled ✓" : res.error;
+    loadPlayers();
+};
 
-async function createMatch(){const league=document.getElementById("league").value,teamA=document.getElementById("teamA").value,teamB=document.getElementById("teamB").value,oddsA=document.getElementById("oddsA").value,oddsB=document.getElementById("oddsB").value;if(!teamA||!teamB){alert("Enter both teams");return;}const r=await call("createMatch",{league,teamA,teamB,oddsA,oddsB});r.success? (showMsg(`Created ID:${r.matchId}`,"matchOutput",2000),loadMatches()):showMsg("Failed:"+r.error,"matchOutput",3000);}
+/* --------------------
+VOID MATCH
+-------------------- */
+voidBtn.onclick = async()=>{
+    const res = await api("voidMatch",{ matchId: voidMatchId.value });
+    voidOutput.textContent = res.success ? "Match Voided ✓" : res.error;
+};
 
-async function addPlayer(){const name=document.getElementById("add_name").value,dp=document.getElementById("add_dp").value,opening=Number(document.getElementById("add_open").value||0);if(!dp){alert("DP required");return;}const r=await call("addPlayer",{name,dp,opening});r.success? (showMsg("Player added","addOutput",2000),loadPlayers()):showMsg("Failed:"+r.error,"addOutput",3000);}
+/* --------------------
+LOAD DP LIST
+-------------------- */
+loadDpBtn.onclick = loadPlayers;
 
-async function placeBet(){const dp=document.getElementById("dpNumber").value,matchId=document.getElementById("betMatchSelect").value,team=document.getElementById("betTeam").value,stake=Number(document.getElementById("betAmount").value),odds=Number(document.getElementById("betOdds").value);if(!dp||!matchId||!team||!stake){alert("Fill all");return;}const r=await call("placeBet",{dp,matchId,team,stake,odds});r.success? showMsg("Bet placed","betOutput",2000):showMsg("Failed:"+r.error,"betOutput",3000);}
+copyDpBtn.onclick = ()=>{
+    navigator.clipboard.writeText(dpList.value);
+    alert("Copied ✓");
+};
 
-async function settleMatch(){const matchId=document.getElementById("matchSelect").value,winner=document.getElementById("winnerSelect").value;if(!matchId||!winner){alert("Select match/winner");return;}if(!confirm("Settle?"))return;const r=await call("settleMatch",{matchId,winner});r.success? (showMsg("Settled","settleOutput",2000),loadPlayers(),loadMatches()):showMsg("Failed:"+r.error,"settleOutput",3000);}
+async function loadPlayers(){
+    const res = await api("getPlayers",{});
+    if(!res.success){ dpList.value="Failed to load"; return; }
 
-async function voidMatch(){const matchId=document.getElementById("matchSelect").value;if(!matchId){alert("Select match");return;}if(!confirm("Void match?"))return;const r=await call("voidMatch",{matchId});r.success? (showMsg("Voided","settleOutput",2000),loadMatches()):showMsg("Failed:"+r.error,"settleOutput",3000);}
+    let rows = res.players;
+    if(rows.length && rows[0][0].toLowerCase() === "dp") rows = rows.slice(1);
 
-function renderDPList(){const area=document.getElementById("dpList");let out=`MEHTA TOSS BOOK DP LIST\n\n`;Object.keys(players).sort((a,b)=>a-b).forEach((k,i)=>{const p=players[k];out+=`${i+1}) ${p.name} — ${k} — ₹${p.balance}\n`;});area.innerText=out;}
-function copyDPList(){navigator.clipboard.writeText(document.getElementById("dpList").innerText).then(()=>alert("Copied"));}
+    removeSelect.innerHTML = `<option value="">Select DP</option>`;
 
-window.addEventListener('load',()=>{loadPlayers();loadMatches();});
+    let txt = "📖 MEHTA TOSS BOOK DP LIST\n" + new Date().toLocaleString() + "\n\n";
+
+    rows.forEach((r,i)=>{
+        const dp = r[0];
+        const name = r[1];
+        const bal = r[2];
+        txt += `${i+1}) ${name} — ${dp} — ₹${bal}\n`;
+
+        removeSelect.insertAdjacentHTML("beforeend",
+            `<option value="${dp}">${name} — ${dp} — ₹${bal}</option>`
+        );
+    });
+
+    txt += `\nTotal Players: ${rows.length}`;
+    dpList.value = txt;
+}
+
+/* load on start */
+loadPlayers();
+
 </script>
+
 </body>
 </html>
