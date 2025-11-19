@@ -1,327 +1,109 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MEHTA TOSS BOOK — Dashboard</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;background:#e9eef3;margin:0;padding:0}
-    .wrap{max-width:980px;margin:18px auto;padding:18px}
-    .header{background:#1f2937;color:#fff;padding:12px 18px;border-radius:8px}
-    .card{background:#fff;padding:12px;border-radius:8px;margin-top:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-    input,select,button,textarea{width:100%;padding:10px;margin-top:8px;border-radius:6px;border:1px solid #e6eef8;font-size:14px}
-    button{background:#1d9bf0;color:#fff;border:0;font-weight:700;cursor:pointer}
-    button.void{background:#ef4444}
-    .row{display:flex;gap:12px}
-    .col{flex:1}
-    .small{color:#6b7280;font-size:13px;margin-top:8px}
-    .dp-area{white-space:pre-wrap;font-family:monospace;background:#f8fafb;padding:10px;border-radius:6px;min-height:80px;overflow:auto}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEHTA TOSS BOOK 📖</title>
+<style>
+body{font-family:sans-serif;background:#f3f5f7;color:#111;margin:0;padding:0}
+.wrap{max-width:900px;margin:auto;padding:16px}
+.card{background:#fff;padding:12px;margin-bottom:12px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+input,select,button{padding:8px;margin:4px 0;width:100%;border-radius:6px;border:1px solid #ccc}
+button{background:#1d9bf0;color:#fff;border:none;cursor:pointer}
+button.ghost{background:#fff;border:1px solid #1d9bf0;color:#1d9bf0}
+.dp-area{white-space:pre-wrap;background:#fff;padding:8px;border:1px solid #ccc;border-radius:6px;min-height:80px;font-family:monospace}
+.flex{display:flex;gap:6px;align-items:center}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="header"><strong>MEHTA TOSS BOOK 📖</strong> — Dashboard</div>
+<div class="wrap">
+<h2>MEHTA TOSS BOOK 📖</h2>
 
-    <!-- Create match -->
-    <div class="card">
-      <strong>Create Match</strong>
-      <input id="league" placeholder="League or match name (optional)">
-      <div class="row">
-        <input id="teamA" placeholder="Team A">
-        <input id="teamB" placeholder="Team B">
-      </div>
-      <div class="row">
-        <select id="oddsA"><option>2.0</option><option>0.95</option><option>0.97</option><option>0.98</option></select>
-        <select id="oddsB"><option>2.0</option><option>0.95</option><option>0.97</option><option>0.98</option></select>
-      </div>
-      <button id="createMatchBtn">Create Match</button>
-      <div id="matchOutput" class="small"></div>
-    </div>
+<div class="card">
+<strong>Create Match</strong>
+<input id="league" placeholder="League">
+<input id="teamA" placeholder="Team A">
+<input id="teamB" placeholder="Team B">
+<select id="oddsA"><option>2.0</option><option>0.95</option><option>0.97</option><option>0.98</option></select>
+<select id="oddsB"><option>2.0</option><option>0.95</option><option>0.97</option><option>0.98</option></select>
+<button onclick="createMatch()">Create Match</button>
+<div id="matchOutput"></div>
+</div>
 
-    <!-- Place bet & players -->
-    <div class="card">
-      <strong>Place Bet (HOLD)</strong>
-      <input id="dpNumber" placeholder="Player DP number">
-      <select id="betMatchSelect"></select>
-      <div class="row">
-        <select id="betTeam"></select>
-        <select id="betOdds"><option>2.0</option><option>0.95</option><option>0.97</option><option>0.98</option></select>
-      </div>
-      <input id="betAmount" type="number" placeholder="Stake amount">
-      <button id="placeBetBtn">Place Bet</button>
-      <div id="betOutput" class="small"></div>
-    </div>
+<div class="card">
+<strong>Active Matches</strong>
+<select id="matchSelect"></select>
+<select id="winnerSelect"></select>
+<div class="flex">
+<button onclick="settleMatch()">Settle Match</button>
+<button onclick="voidMatch()">Void Match</button>
+</div>
+<div id="settleOutput"></div>
+</div>
 
-    <!-- Matches: settle / void -->
-    <div class="card">
-      <strong>Settle / Void Match</strong>
-      <select id="matchSelect"></select>
-      <select id="winnerSelect"><option value="">Select winner or VOID</option></select>
-      <div class="row">
-        <button id="settleBtn">Settle Match</button>
-        <button id="voidBtn" class="void">VOID Match</button>
-      </div>
-      <div id="settleOutput" class="small"></div>
-    </div>
+<div class="card">
+<strong>Add Player</strong>
+<input id="add_name" placeholder="Player Name">
+<input id="add_dp" placeholder="DP Number">
+<input id="add_open" placeholder="Opening Balance" type="number">
+<button onclick="addPlayer()">Add Player</button>
+<div id="addOutput"></div>
+</div>
 
-    <!-- Players management -->
-    <div class="card">
-      <strong>Players & Balance</strong>
-      <input id="add_name" placeholder="Name (add)">
-      <input id="add_dp" placeholder="DP (add)">
-      <input id="add_open" type="number" placeholder="Opening balance">
-      <button id="addPlayerBtn">Add Player</button>
-      <div class="small" id="addOutput"></div>
+<div class="card">
+<strong>Place Bet</strong>
+<select id="betMatchSelect"></select>
+<select id="betTeam"></select>
+<select id="betOdds"></select>
+<input id="dpNumber" placeholder="DP Number">
+<input id="betAmount" placeholder="Stake" type="number">
+<button onclick="placeBet()">Place Bet</button>
+<div id="betOutput"></div>
+</div>
 
-      <hr>
-
-      <select id="removeSelect"></select>
-      <button id="removePlayerBtn">Remove Player</button>
-      <div class="small" id="removeOutput"></div>
-
-      <hr>
-
-      <input id="balDP" placeholder="DP for adjust">
-      <input id="balAmount" type="number" placeholder="Amount (+ to add, - to subtract)">
-      <button id="updateBalBtn">Update Balance</button>
-      <div id="balanceOutput" class="small"></div>
-
-      <hr>
-
-      <button id="copyDpBtn">Copy DP List</button>
-      <div id="dpList" class="dp-area">Loading...</div>
-    </div>
-
-    <!-- All bets -->
-    <div class="card">
-      <strong>All Bets</strong>
-      <textarea id="allBets" readonly></textarea>
-    </div>
-  </div>
+<div class="card">
+<strong>DP List</strong>
+<button onclick="copyDPList()">Copy DP List</button>
+<div id="dpList" class="dp-area">Loading...</div>
+</div>
+</div>
 
 <script>
-/* ====== Set your deployed Apps Script Web App URL here AFTER you deploy ====== */
-const API_URL = "https://script.google.com/macros/s/AKfycbzTSiGlzd-y4CkJ4yYYRxwN87iY_bSBn1gg-J2n74OJTmO7ovqsutoGLeWFNx8GP6fe/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwK0Tyi84yRpO4FB8IrK2H5YP1ifT2OwmpWxFqnosInVFpYhoNqy-8DjbwKFdk0s1AJ/exec"; // <-- Replace with your Apps Script URL
 
-/* helper: call backend */
-async function call(action, payload = {}) {
-  payload.action = action;
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload), headers: { "Content-Type":"application/json" }});
-    return await res.json();
-  } catch (err) {
-    console.error("Network/API error:", err);
-    return { success:false, error: String(err) };
-  }
+let matches=[],players={};
+
+async function call(action,payload={}){payload.action=action;
+try{const r=await fetch(API_URL,{method:'POST',headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),mode:'cors',credentials:'omit'});return await r.json();}catch(e){return {success:false,error:e.message}}
 }
 
-/* local state */
-let players = {}; // dp -> {name,balance}
-let matches = []; // array of matches
-let bets = [];    // array of bets
+function showMsg(msg,id,time=1500){document.getElementById(id).innerText=msg;setTimeout(()=>document.getElementById(id).innerText="",time)}
 
-/* parse rows helper */
-function parseRows(rows){
-  if(!Array.isArray(rows)) return [];
-  // if first row looks like header, return rows.slice(1)
-  if(rows.length && rows[0].some(cell => /id|dp|name|match|team|amount|odds|status/i.test(String(cell)))) {
-    return rows.slice(1);
-  }
-  return rows.slice();
-}
+async function loadPlayers(){const r=await call("getPlayers");players={};if(r.success){r.players.forEach(p=>players[String(p[0])]={name:p[1],balance:p[2]});}renderDPList();}
 
-/* render DP list */
-function renderDPList(){
-  const area = document.getElementById("dpList");
-  const keys = Object.keys(players).sort((a,b)=> a.localeCompare(b, undefined, {numeric:true}));
-  if(!keys.length){ area.textContent = "No players"; return; }
-  let out = `MEHTA TOSS BOOK DP LIST — ${new Date().toLocaleString()}\n\n`;
-  keys.forEach((k,i)=> {
-    const p = players[k];
-    out += `${i+1}) ${p.name||'-'} — ${k} — ₹${p.balance}\n`;
-  });
-  area.textContent = out;
-}
+async function loadMatches(){const r=await call("getMatches");matches=[];const sel=document.getElementById("matchSelect"),bet=document.getElementById("betMatchSelect");sel.innerHTML="";bet.innerHTML="";if(r.success){matches=r.matches;matches.forEach(m=>{sel.insertAdjacentHTML('beforeend',`<option value="${m[0]}">${m[2]} vs ${m[3]} (${m[1]}) [${m[6]}]</option>`);bet.insertAdjacentHTML('beforeend',`<option value="${m[0]}">${m[2]} vs ${m[3]}</option>`);});updateWinnerSelect();updateBetTeam();}}
 
-/* copy DP list */
-document.getElementById("copyDpBtn").addEventListener("click", async ()=>{
-  const txt = document.getElementById("dpList").textContent;
-  try { await navigator.clipboard.writeText(txt); alert("DP list copied"); } catch(e){ alert("Copy failed"); }
-});
+function updateWinnerSelect(){const sel=document.getElementById("matchSelect"),win=document.getElementById("winnerSelect");const m=matches.find(x=>x[0]==sel.value);win.innerHTML="";if(m){win.innerHTML=`<option>${m[2]}</option><option>${m[3]}</option>`;}}
 
-/* load everything (getAll) */
-async function loadAll(){
-  const res = await call("getAll");
-  if(!res || !res.success){ console.error("getAll failed", res); showMsg("Failed to load data", "matchOutput"); return; }
+function updateBetTeam(){const sel=document.getElementById("betMatchSelect"),team=document.getElementById("betTeam"),odds=document.getElementById("betOdds");const m=matches.find(x=>x[0]==sel.value);team.innerHTML="";if(m){team.innerHTML=`<option value="${m[2]}">${m[2]}</option><option value="${m[3]}">${m[3]}</option>`;odds.value=m[4];}}
 
-  // parse players
-  players = {};
-  const pRows = parseRows(res.players || []);
-  pRows.forEach(r=>{
-    // try typical layout: [dp,name,balance] or [id,name,dp] etc.
-    // prefer dp at index 0 if it looks like digits or length>1
-    let dp = String(r[0]||"").trim();
-    let name = String(r[1]||"").trim();
-    let bal = Number(r[2] || 0);
-    // If dp seems not right (like numeric id), try 2nd or 3rd
-    if(!dp && r.length >=2) dp = String(r[1] || "");
-    players[dp] = { name: name, balance: bal };
-  });
+document.getElementById("matchSelect").addEventListener("change",updateWinnerSelect);
+document.getElementById("betMatchSelect").addEventListener("change",updateBetTeam);
 
-  // parse matches
-  matches = (parseRows(res.matches || [])).map(r => ({
-    id: String(r[0]||""), league: String(r[1]||""), teamA: String(r[2]||""), teamB: String(r[3]||""), oddsA: String(r[4]||"2.0"), oddsB: String(r[5]||"2.0"), status: String(r[6]||"")
-  }));
+async function createMatch(){const league=document.getElementById("league").value,teamA=document.getElementById("teamA").value,teamB=document.getElementById("teamB").value,oddsA=document.getElementById("oddsA").value,oddsB=document.getElementById("oddsB").value;if(!teamA||!teamB){alert("Enter both teams");return;}const r=await call("createMatch",{league,teamA,teamB,oddsA,oddsB});r.success? (showMsg(`Created ID:${r.matchId}`,"matchOutput",2000),loadMatches()):showMsg("Failed:"+r.error,"matchOutput",3000);}
 
-  // parse bets
-  bets = (parseRows(res.bets || [])).map(r => ({
-    matchId: String(r[0]||""), dp: String(r[1]||""), team: String(r[2]||""), stake: Number(r[3]||0), odds: Number(r[4]||0), status: String(r[5]||"")
-  }));
+async function addPlayer(){const name=document.getElementById("add_name").value,dp=document.getElementById("add_dp").value,opening=Number(document.getElementById("add_open").value||0);if(!dp){alert("DP required");return;}const r=await call("addPlayer",{name,dp,opening});r.success? (showMsg("Player added","addOutput",2000),loadPlayers()):showMsg("Failed:"+r.error,"addOutput",3000);}
 
-  renderAll();
-}
+async function placeBet(){const dp=document.getElementById("dpNumber").value,matchId=document.getElementById("betMatchSelect").value,team=document.getElementById("betTeam").value,stake=Number(document.getElementById("betAmount").value),odds=Number(document.getElementById("betOdds").value);if(!dp||!matchId||!team||!stake){alert("Fill all");return;}const r=await call("placeBet",{dp,matchId,team,stake,odds});r.success? showMsg("Bet placed","betOutput",2000):showMsg("Failed:"+r.error,"betOutput",3000);}
 
-/* render matches and selects and bets */
-function renderAll(){
-  // matches to selects
-  const matchSel = document.getElementById("matchSelect");
-  const betMatchSel = document.getElementById("betMatchSelect");
-  matchSel.innerHTML = `<option value="">Select match</option>`;
-  betMatchSel.innerHTML = `<option value="">Select match</option>`;
-  matches.forEach(m=>{
-    const label = `${m.teamA} vs ${m.teamB} (${m.league}) [${m.status}]`;
-    matchSel.insertAdjacentHTML('beforeend', `<option value="${m.id}">${label}</option>`);
-    betMatchSel.insertAdjacentHTML('beforeend', `<option value="${m.id}">${label}</option>`);
-  });
+async function settleMatch(){const matchId=document.getElementById("matchSelect").value,winner=document.getElementById("winnerSelect").value;if(!matchId||!winner){alert("Select match/winner");return;}if(!confirm("Settle?"))return;const r=await call("settleMatch",{matchId,winner});r.success? (showMsg("Settled","settleOutput",2000),loadPlayers(),loadMatches()):showMsg("Failed:"+r.error,"settleOutput",3000);}
 
-  // winner select
-  const winnerSel = document.getElementById("winnerSelect");
-  const currentMatch = matches[0] || null;
-  if(currentMatch){
-    winnerSel.innerHTML = `<option value="">Select winner or VOID</option>
-      <option value="${currentMatch.teamA}">${currentMatch.teamA}</option>
-      <option value="${currentMatch.teamB}">${currentMatch.teamB}</option>
-      <option value="VOID">VOID</option>`;
-  } else {
-    winnerSel.innerHTML = `<option value="">Select winner or VOID</option><option value="VOID">VOID</option>`;
-  }
+async function voidMatch(){const matchId=document.getElementById("matchSelect").value;if(!matchId){alert("Select match");return;}if(!confirm("Void match?"))return;const r=await call("voidMatch",{matchId});r.success? (showMsg("Voided","settleOutput",2000),loadMatches()):showMsg("Failed:"+r.error,"settleOutput",3000);}
 
-  // players list -> dpList and bet player select
-  // build players object might have empty keys; ensure
-  renderDPList();
-  populateRemoveSelect();
+function renderDPList(){const area=document.getElementById("dpList");let out=`MEHTA TOSS BOOK DP LIST\n\n`;Object.keys(players).sort((a,b)=>a-b).forEach((k,i)=>{const p=players[k];out+=`${i+1}) ${p.name} — ${k} — ₹${p.balance}\n`;});area.innerText=out;}
+function copyDPList(){navigator.clipboard.writeText(document.getElementById("dpList").innerText).then(()=>alert("Copied"));}
 
-  // bets area
-  const all = document.getElementById("allBets");
-  if(!bets.length){ all.value = "No bets yet"; } else {
-    all.value = bets.map(b=>`Match:${b.matchId} | DP:${b.dp} | Team:${b.team} | ₹${b.stake} | odds:${b.odds} | ${b.status}`).join("\n");
-  }
-}
-
-/* populateRemoveSelect */
-function populateRemoveSelect(){
-  const sel = document.getElementById("removeSelect");
-  sel.innerHTML = `<option value="">Select DP</option>`;
-  const keys = Object.keys(players).sort((a,b)=> a.localeCompare(b, undefined, {numeric:true}));
-  keys.forEach(k=>{
-    const p = players[k];
-    sel.insertAdjacentHTML('beforeend', `<option value="${k}">${p.name||'-'} — ${k} — ₹${p.balance}</option>`);
-  });
-}
-
-/* helper show msg small */
-function showMsg(txt, elId="matchOutput", timeout=1500){
-  const el = document.getElementById(elId);
-  if(!el) return;
-  el.textContent = txt;
-  if(timeout) setTimeout(()=>{ if(el.textContent === txt) el.textContent = ""; }, timeout);
-}
-
-/* Create match */
-document.getElementById("createMatchBtn").addEventListener("click", async ()=>{
-  const league = document.getElementById("league").value.trim();
-  const teamA = document.getElementById("teamA").value.trim();
-  const teamB = document.getElementById("teamB").value.trim();
-  const oddsA = document.getElementById("oddsA").value;
-  const oddsB = document.getElementById("oddsB").value;
-  if(!teamA || !teamB) return alert("Enter both teams");
-  const res = await call("createMatch", { league, teamA, teamB, oddsA, oddsB });
-  if(res && res.success){ showMsg("Match created: " + res.matchId, "matchOutput", 2200); await loadAll(); } else showMsg("Create failed: " + (res.error||"unknown"), "matchOutput", 3000);
-});
-
-/* Place bet */
-document.getElementById("placeBetBtn").addEventListener("click", async ()=>{
-  const dp = document.getElementById("dpNumber").value.trim();
-  const matchId = document.getElementById("betMatchSelect").value;
-  const team = document.getElementById("betTeam").value;
-  const stake = Number(document.getElementById("betAmount").value);
-  const odds = Number(document.getElementById("betOdds").value);
-  if(!dp || !matchId || !team || !stake) return alert("Fill DP, match, team and stake");
-  const res = await call("addBet", { matchId, playerId: dp, team, amount: stake, odds });
-  if(res && res.success){ showMsg("Bet placed (HOLD)", "betOutput", 2000); await loadAll(); } else showMsg("Place failed: "+(res.error||"unknown"), "betOutput", 3000);
-});
-
-/* Settle match */
-document.getElementById("settleBtn").addEventListener("click", async ()=>{
-  const matchId = document.getElementById("matchSelect").value;
-  const winner = document.getElementById("winnerSelect").value;
-  if(!matchId || !winner) return alert("Select match and winner (or choose VOID)");
-  if(winner === "VOID"){
-    if(!confirm("Void match? All bets will be marked VOID and DPs unchanged.")) return;
-    const res = await call("voidMatch", { matchId });
-    if(res && res.success){ showMsg("Match voided", "settleOutput", 2200); await loadAll(); } else showMsg("Void failed: "+(res.error||"unknown"), "settleOutput", 3000);
-    return;
-  }
-  if(!confirm("Settle match: " + matchId + " -> " + winner + " ?")) return;
-  const res = await call("settleMatch", { matchId, winner });
-  if(res && res.success){ showMsg("Settled. Updated bets: " + (res.updatedBets||res.updated || 'n/a'), "settleOutput", 2600); await loadAll(); } else showMsg("Settle failed: "+(res.error||"unknown"), "settleOutput", 3000);
-});
-
-/* Void explicit button */
-document.getElementById("voidBtn").addEventListener("click", async ()=>{
-  const matchId = document.getElementById("matchSelect").value;
-  if(!matchId) return alert("Select match to void");
-  if(!confirm("Void match? All bets will be marked VOID and DPs unchanged.")) return;
-  const res = await call("voidMatch", { matchId });
-  if(res && res.success){ showMsg("Match voided", "settleOutput", 2200); await loadAll(); } else showMsg("Void failed: "+(res.error||"unknown"), "settleOutput", 3000);
-});
-
-/* Add player */
-document.getElementById("addPlayerBtn").addEventListener("click", async ()=>{
-  const name = document.getElementById("add_name").value.trim();
-  const dp = document.getElementById("add_dp").value.trim();
-  const opening = Number(document.getElementById("add_open").value||0);
-  if(!dp) return alert("DP required");
-  const res = await call("addPlayer", { dp, name, balance: opening });
-  if(res && res.success){ showMsg("Player added: " + dp, "addOutput", 2000); await loadAll(); } else showMsg("Add failed: "+(res.error||"unknown"), "addOutput", 3000);
-});
-
-/* Remove player */
-document.getElementById("removePlayerBtn").addEventListener("click", async ()=>{
-  const dp = document.getElementById("removeSelect").value;
-  if(!dp) return alert("Select player");
-  if(!confirm("Remove player " + dp + " ?")) return;
-  const res = await call("removePlayer", { dp });
-  if(res && res.success){ showMsg("Removed " + dp, "removeOutput", 2000); await loadAll(); } else showMsg("Remove failed: "+(res.error||"unknown"), "removeOutput", 3000);
-});
-
-/* Update balance */
-document.getElementById("updateBalBtn").addEventListener("click", async ()=>{
-  const dp = document.getElementById("balDP").value.trim();
-  const amount = Number(document.getElementById("balAmount").value||0);
-  if(!dp) return alert("DP required");
-  const res = await call("updateBalance", { dp, amount });
-  if(res && res.success){ showMsg("Balance updated: ₹" + (res.balance || 'n/a'), "balanceOutput", 2000); await loadAll(); } else showMsg("Update failed: "+(res.error||"unknown"), "balanceOutput", 3000);
-});
-
-/* initially load */
-(async function init(){
-  if(API_URL === "REPLACE_WITH_YOUR_DEPLOYED_WEB_APP_URL"){
-    alert("Replace API_URL in the HTML with your deployed Apps Script Web App URL, then reload.");
-    return;
-  }
-  await loadAll();
-})();
+window.addEventListener('load',()=>{loadPlayers();loadMatches();});
 </script>
 </body>
 </html>
